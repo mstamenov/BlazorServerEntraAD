@@ -1,0 +1,25 @@
+﻿@page "/myblobs"
+@using Azure
+@using Azure.Storage.Blobs.Models
+@using BlazorServerEntraAD.Services
+@inject IBlobService blobService
+@attribute [Authorize]
+
+<h3>My blobs in test container</h3>
+@if (blobs is not null)
+{
+    @foreach (var blob in blobs)
+    {
+        <p>@blob.Name</p>   
+    }
+}
+
+@code {
+    private Pageable<BlobItem> blobs;
+
+    protected override void OnInitialized()
+    {
+        var containerClient = this.blobService.GetBlobContainerClient("test");
+        this.blobs = containerClient.GetBlobs();
+    }
+}
